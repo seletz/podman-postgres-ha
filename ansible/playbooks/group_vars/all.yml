@@ -1,8 +1,7 @@
 # PostgreSQL Configuration
 postgres_version: "16"
 postgres_image: "docker.io/library/postgres:{{ postgres_version }}"
-postgres_database: "testdb"
-postgres_user: "testuser"
+postgres_user: "postgres"
 postgres_password: "securepass123"
 postgres_replication_user: "replicator"
 postgres_replication_password: "replicatorpass123"

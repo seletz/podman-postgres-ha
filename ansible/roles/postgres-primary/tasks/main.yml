@@ -42,9 +42,3 @@
     port: "{{ postgres_port }}"
     host: "{{ primary_host }}"
     timeout: 30
-
-- name: Setup replication user
-  containers.podman.podman_container_exec:
-    name: "{{ postgres_container_name }}"
-    command: psql -U {{ postgres_user }} -d {{ postgres_database }} -f /tmp/init-replica.sql
-  become: yes
