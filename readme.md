@@ -103,29 +103,36 @@ $ nmcli connection up System enp0s1
 
 ```text
 ansible
-├── group_vars
-│ └── all.yml
+├── ansible.cfg
 ├── inventory
-│ └── hosts.yml
+│   └── hosts.yml
 ├── playbooks
-│ └── site.yml
+│   ├── group_vars
+│   │   └── all.yml
+│   ├── site.yml
+│   └── test-podman-role.yml
 └── roles
     ├── podman-setup
-    │ └── tasks
-    │     └── main.yml
+    │   └── tasks
+    │       └── main.yml
+    ├── postgres-base
+    │   └── tasks
+    │       └── main.yml
     ├── postgres-primary
-    │ ├── tasks
-    │ │ └── main.yml
-    │ └── templates
-    │     ├── init-replica.sql.j2
-    │     └── postgres-primary.container
+    │   ├── handlers
+    │   │   └── main.yml
+    │   ├── tasks
+    │   │   └── main.yml
+    │   └── templates
+    │       ├── init-replica.sql.j2
+    │       └── postgres-primary.container
     └── postgres-replica
         ├── tasks
-        │ └── main.yml
+        │   └── main.yml
         └── templates
             └── postgres-replica.container
 
-13 directories, 9 files
+16 directories, 13 files
 ```
 
 With that, we can now `ping` the servers:
