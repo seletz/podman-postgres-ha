@@ -4,7 +4,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Container]
-Image=docker.io/library/postgres:{{ postgres_version }}
+Image={{ postgres_image }}
 ContainerName={{ postgres_container_name }}
 Environment=POSTGRES_DB={{ postgres_database }}
 Environment=POSTGRES_USER={{ postgres_user }}
