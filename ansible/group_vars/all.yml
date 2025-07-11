@@ -1,5 +1,5 @@
 # PostgreSQL Configuration
-postgres_version: "15"
+postgres_version: "16"
 postgres_database: "testdb"
 postgres_user: "testuser"
 postgres_password: "securepass123"
