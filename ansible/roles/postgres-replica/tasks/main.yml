@@ -31,12 +31,21 @@
 - name: Create base backup from primary
   shell: |
     podman run --rm \
+      --network=host \
+      --user {{ postgres_uid }}:{{ postgres_gid }} \ 
       -v {{ postgres_data_dir }}:/var/lib/postgresql/data:Z \
       -e PGPASSWORD={{ postgres_replication_password }} \
-      postgres:{{ postgres_version }} \
+      {{ postgres_image }} \
       pg_basebackup -h {{ primary_host }} -D /var/lib/postgresql/data -U {{ postgres_replication_user }} -v -P
   become: yes
-  become_user: postgres
+
+- name: Fix data directory ownership after backup
+  file:
+    path: "{{ postgres_data_dir }}"
+    owner: postgres
+    group: postgres
+    recurse: yes
+  become: yes
 
 - name: Generate replica PostgreSQL quadlet
   template:

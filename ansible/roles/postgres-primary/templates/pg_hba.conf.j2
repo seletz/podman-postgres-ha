@@ -1,0 +1,19 @@
+# PostgreSQL Client Authentication Configuration File
+# TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+# "local" is for Unix domain socket connections only
+local   all             all                                     trust
+# IPv4 local connections:
+host    all             all             127.0.0.1/32            scram-sha-256
+# IPv6 local connections:
+host    all             all             ::1/128                 scram-sha-256
+
+# Allow replication connections from replica
+host    replication     {{ postgres_replication_user }}     {{ replica_host }}/32       scram-sha-256
+host    replication     {{ postgres_replication_user }}     {{ primary_host }}/32       scram-sha-256
+
+# Allow connections from both hosts for regular database access
+host    all             all             {{ primary_host }}/32   scram-sha-256
+host    all             all             {{ replica_host }}/32   scram-sha-256
+
+# EOF

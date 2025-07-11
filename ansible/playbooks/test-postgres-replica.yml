@@ -1,0 +1,7 @@
+---
+- name: Test PG Primary Setup
+  hosts: pg1
+  become: yes
+  roles:
+    - postgres-base
+    - postgres-replica

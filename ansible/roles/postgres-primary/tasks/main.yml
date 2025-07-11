@@ -25,6 +25,15 @@
     mode: '0600'
   become: yes
 
+- name: Create custom pg_hba.conf
+  template:
+    src: pg_hba.conf.j2
+    dest: "{{ postgres_home_dir }}/pg_hba.conf"
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  become: yes
+
 - name: Reload systemd daemon
   systemd:
     daemon_reload: yes

@@ -4,12 +4,11 @@ After=network-online.target
 Wants=network-online.target
 
 [Container]
-Image=docker.io/library/postgres:{{ postgres_version }}
+Image={{ postgres_image }}
 ContainerName={{ postgres_container_name }}
 Volume={{ postgres_data_dir }}:/var/lib/postgresql/data:Z
 PublishPort={{ postgres_port }}:5432
-User=postgres
-Group=postgres
+User={{ postgres_uid }}:{{ postgres_gid }}
 
 # Replica-specific configuration
 Environment=POSTGRES_PRIMARY_CONNINFO=host={{ primary_host }} port={{ postgres_port }} user={{ postgres_replication_user }} password={{ postgres_replication_password }}

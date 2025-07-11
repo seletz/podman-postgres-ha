@@ -52,3 +52,23 @@
     name: "{{ postgres_image }}"
     state: present
   become: yes
+
+- name: Configure subuid for postgres user
+  lineinfile:
+    path: /etc/subuid
+    line: "postgres:100000:65536"
+    create: yes
+  become: yes
+
+- name: Configure subgid for postgres user
+  lineinfile:
+    path: /etc/subgid
+    line: "postgres:100000:65536"
+    create: yes
+  become: yes
+
+- name: Run podman system migrate for postgres user
+  shell: podman system migrate
+  become: yes
+  become_user: postgres
+  ignore_errors: yes
