@@ -90,3 +90,54 @@ The key's randomart image is:
 |        ..+o ..+.|
 +----[SHA256]-----+
 ```
+
+- Network setup -- set static IPs.  On each VM, do:
+
+```bash
+$ nmcli connection modify enp0s1 ipv4.addresses "192.168.200.10/24" ipv4.gateway "192.168.200.1" \
+    ipv4.dns "192.168.200.1,8.8.8.8" ipv4.method manual
+$ nmcli connection up System enp0s1
+```
+
+## Step 2: Ansible Files
+
+```text
+ansible
+├── group_vars
+│ └── all.yml
+├── inventory
+│ └── hosts.yml
+├── playbooks
+│ └── site.yml
+└── roles
+    ├── podman-setup
+    │ └── tasks
+    │     └── main.yml
+    ├── postgres-primary
+    │ ├── tasks
+    │ │ └── main.yml
+    │ └── templates
+    │     ├── init-replica.sql.j2
+    │     └── postgres-primary.container
+    └── postgres-replica
+        ├── tasks
+        │ └── main.yml
+        └── templates
+            └── postgres-replica.container
+
+13 directories, 9 files
+```
+
+With that, we can now `ping` the servers:
+
+```bash
+$ ansible all -i inventory/hosts.yml -m ping
+pg2 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+pg1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```

@@ -1,0 +1,16 @@
+# PostgreSQL Configuration
+postgres_version: "15"
+postgres_database: "testdb"
+postgres_user: "testuser"
+postgres_password: "securepass123"
+postgres_replication_user: "replicator"
+postgres_replication_password: "replicatorpass123"
+
+# Networking
+postgres_port: 5432
+primary_host: "192.168.200.10"
+replica_host: "192.168.200.20"
+
+# Podman Configuration
+postgres_data_dir: "/var/lib/postgresql/data"
+postgres_container_name: "postgres-ha"

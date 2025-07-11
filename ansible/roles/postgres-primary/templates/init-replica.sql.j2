@@ -1,0 +1,5 @@
+-- Create replication user
+CREATE USER {{ postgres_replication_user }} WITH REPLICATION PASSWORD '{{ postgres_replication_password }}';
+
+-- Configure pg_hba.conf for replication
+-- This would typically be done via postgresql.conf mounting

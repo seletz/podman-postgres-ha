@@ -1,0 +1,66 @@
+---
+- name: Create systemd directory for containers
+  file:
+    path: /etc/containers/systemd
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Stop any existing PostgreSQL container
+  systemd:
+    name: postgres-replica.service
+    state: stopped
+  become: yes
+  ignore_errors: yes
+
+- name: Remove existing data directory
+  file:
+    path: "{{ postgres_data_dir }}"
+    state: absent
+  become: yes
+
+- name: Recreate data directory
+  file:
+    path: "{{ postgres_data_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+  become: yes
+
+- name: Create base backup from primary
+  shell: |
+    podman run --rm \
+      -v {{ postgres_data_dir }}:/var/lib/postgresql/data:Z \
+      -e PGPASSWORD={{ postgres_replication_password }} \
+      postgres:{{ postgres_version }} \
+      pg_basebackup -h {{ primary_host }} -D /var/lib/postgresql/data -U {{ postgres_replication_user }} -v -P
+  become: yes
+  become_user: postgres
+
+- name: Generate replica PostgreSQL quadlet
+  template:
+    src: postgres-replica.container
+    dest: /etc/containers/systemd/postgres-replica.container
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Start and enable PostgreSQL replica
+  systemd:
+    name: postgres-replica.service
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Wait for PostgreSQL replica to be ready
+  wait_for:
+    port: "{{ postgres_port }}"
+    host: "{{ replica_host }}"
+    timeout: 30

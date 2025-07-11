@@ -1,0 +1,27 @@
+---
+- name: Setup PostgreSQL HA Cluster
+  hosts: postgres_cluster
+  become: yes
+  
+  roles:
+    - podman-setup
+
+- name: Configure PostgreSQL Primary
+  hosts: postgres_cluster
+  become: yes
+  vars:
+    - postgres_role: primary
+  
+  roles:
+    - postgres-primary
+  when: postgres_role == 'primary'
+
+- name: Configure PostgreSQL Replica
+  hosts: postgres_cluster
+  become: yes
+  vars:
+    - postgres_role: replica
+  
+  roles:
+    - postgres-replica
+  when: postgres_role == 'replica'

@@ -1,0 +1,51 @@
+---
+- name: Create systemd directory for containers
+  file:
+    path: /etc/containers/systemd
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: Generate primary PostgreSQL quadlet
+  template:
+    src: postgres-primary.container
+    dest: /etc/containers/systemd/postgres-primary.container
+    owner: root
+    group: root
+    mode: '0644'
+  become: yes
+  notify: reload systemd
+
+- name: Create init script for replica user
+  template:
+    src: init-replica.sql.j2
+    dest: /tmp/init-replica.sql
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  become: yes
+
+- name: Reload systemd daemon
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: Start and enable PostgreSQL primary
+  systemd:
+    name: postgres-primary.service
+    state: started
+    enabled: yes
+  become: yes
+
+- name: Wait for PostgreSQL to be ready
+  wait_for:
+    port: "{{ postgres_port }}"
+    host: "{{ primary_host }}"
+    timeout: 30
+
+- name: Setup replication user
+  containers.podman.podman_container_exec:
+    name: "{{ postgres_container_name }}"
+    command: psql -U postgres -f /tmp/init-replica.sql
+  become: yes
+  become_user: postgres
