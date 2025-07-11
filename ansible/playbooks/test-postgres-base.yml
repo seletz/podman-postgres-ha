@@ -1,0 +1,6 @@
+---
+- name: Test PG Base Setup
+  hosts: postgres_cluster
+  become: yes
+  roles:
+    - postgres-base

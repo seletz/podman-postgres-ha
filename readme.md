@@ -48,8 +48,8 @@ Rock Linux installation:
 - I kept root disabled
 - I kept "minimal install"
 
-I set up `pg1` an then clonde that to `pg2`.  After the clone (copy), you need to edit the copy and
-randomise the Ethernet MAC.
+I set up `pg1` and then clone that to `pg2`.  After the clone (copy), you need to edit the copy and
+randomize the Ethernet MAC.
 
 Network:
 - I used `nmcli` to get fixed, manual IP adresses
@@ -101,39 +101,11 @@ $ nmcli connection up System enp0s1
 
 ## Step 2: Ansible Files
 
-```text
-ansible
-├── ansible.cfg
-├── inventory
-│   └── hosts.yml
-├── playbooks
-│   ├── group_vars
-│   │   └── all.yml
-│   ├── site.yml
-│   └── test-podman-role.yml
-└── roles
-    ├── podman-setup
-    │   └── tasks
-    │       └── main.yml
-    ├── postgres-base
-    │   └── tasks
-    │       └── main.yml
-    ├── postgres-primary
-    │   ├── handlers
-    │   │   └── main.yml
-    │   ├── tasks
-    │   │   └── main.yml
-    │   └── templates
-    │       ├── init-replica.sql.j2
-    │       └── postgres-primary.container
-    └── postgres-replica
-        ├── tasks
-        │   └── main.yml
-        └── templates
-            └── postgres-replica.container
+> [!Note]
+> I needed to enable *passwordless sudo* for the `seletz` user.
+> Using `sudo visudo`, I added `seletz ALL=(ALL) NOPASSWD: ALL` below that
+> `seletz ALL=(ALL) NOPASSWD: ALL` line.
 
-16 directories, 13 files
-```
 
 With that, we can now `ping` the servers:
 
@@ -147,4 +119,14 @@ pg1 | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
+```
+
+And we can check if the passwordless `sudo` works:
+
+```bash
+$ ansible all -i inventory/hosts.yml -m shell -a "sudo whoami"
+pg1 | CHANGED | rc=0 >>
+root
+pg2 | CHANGED | rc=0 >>
+root
 ```

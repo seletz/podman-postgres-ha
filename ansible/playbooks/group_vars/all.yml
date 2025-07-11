@@ -1,5 +1,6 @@
 # PostgreSQL Configuration
 postgres_version: "16"
+postgres_image: "docker.io/library/postgres:{{ postgres_version }}"
 postgres_database: "testdb"
 postgres_user: "testuser"
 postgres_password: "securepass123"
@@ -11,6 +12,9 @@ postgres_port: 5432
 primary_host: "192.168.200.10"
 replica_host: "192.168.200.20"
 
+# PostgreSQL System Configuration
+postgres_home_dir: "/var/lib/postgresql"
+postgres_data_dir: "{{ postgres_home_dir }}/data"
+
 # Podman Configuration
-postgres_data_dir: "/var/lib/postgresql/data"
 postgres_container_name: "postgres-ha"

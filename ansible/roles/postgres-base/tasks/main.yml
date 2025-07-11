@@ -1,10 +1,17 @@
 ---
+- name: Create postgres group
+  group:
+    name: postgres
+    gid: "{{ postgres_gid }}"
+    state: present
+  become: yes
+
 - name: Create postgres user
   user:
     name: postgres
-    uid: 999
+    uid: "{{ postgres_uid }}"
     group: postgres
-    home: /var/lib/postgresql
+    home: "{{ postgres_home_dir }}"
     create_home: yes
     shell: /bin/bash
   become: yes
@@ -28,7 +35,6 @@
 
 - name: Pull PostgreSQL container image
   containers.podman.podman_image:
-    name: "docker.io/library/postgres:{{ postgres_version }}"
+    name: "{{ postgres_image }}"
     state: present
   become: yes
-  become_user: postgres
