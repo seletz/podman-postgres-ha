@@ -5,23 +5,18 @@
   
   roles:
     - podman-setup
+    - postgres-base
 
 - name: Configure PostgreSQL Primary
-  hosts: postgres_cluster
+  hosts: pg1
   become: yes
-  vars:
-    - postgres_role: primary
   
   roles:
     - postgres-primary
-  when: postgres_role == 'primary'
 
 - name: Configure PostgreSQL Replica
-  hosts: postgres_cluster
+  hosts: pg2
   become: yes
-  vars:
-    - postgres_role: replica
   
   roles:
     - postgres-replica
-  when: postgres_role == 'replica'

@@ -1,0 +1,6 @@
+---
+- name: Test Podman Setup Only
+  hosts: postgres_cluster
+  become: yes
+  roles:
+    - podman-setup

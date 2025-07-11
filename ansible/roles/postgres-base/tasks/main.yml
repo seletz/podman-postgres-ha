@@ -1,0 +1,38 @@
+---
+- name: Debug postgres_data_dir variable
+  debug:
+    var: postgres_data_dir
+
+- name: Create postgres user
+  user:
+    name: postgres
+    uid: 999
+    group: postgres
+    home: /var/lib/postgresql
+    create_home: yes
+    shell: /bin/bash
+  become: yes
+
+- name: Create PostgreSQL data directory
+  file:
+    path: "{{ postgres_data_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+  become: yes
+
+- name: Configure firewall for PostgreSQL
+  firewalld:
+    port: "{{ postgres_port }}/tcp"
+    permanent: yes
+    state: enabled
+    immediate: yes
+  become: yes
+
+- name: Pull PostgreSQL container image
+  containers.podman.podman_image:
+    name: "docker.io/library/postgres:{{ postgres_version }}"
+    state: present
+  become: yes
+  become_user: postgres
