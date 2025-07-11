@@ -16,4 +16,9 @@ host    replication     {{ postgres_replication_user }}     {{ primary_host }}/3
 host    all             all             {{ primary_host }}/32   scram-sha-256
 host    all             all             {{ replica_host }}/32   scram-sha-256
 
+# Allow all connections from the same network
+host    all             all             {{ database_network }}  scram-sha-256
+# UTM bridge network
+host    all             all             10.88.0.0/16            scram-sha-256
+
 # EOF

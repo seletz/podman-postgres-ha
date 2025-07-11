@@ -36,7 +36,7 @@
       -v {{ postgres_data_dir }}:/var/lib/postgresql/data:Z \
       -e PGPASSWORD={{ postgres_replication_password }} \
       {{ postgres_image }} \
-      pg_basebackup -h {{ primary_host }} -D /var/lib/postgresql/data -U {{ postgres_replication_user }} -v -P
+      pg_basebackup -h {{ primary_host }} -D /var/lib/postgresql/data -U {{ postgres_replication_user }} -v -P -R
   become: yes
 
 - name: Fix data directory ownership after backup

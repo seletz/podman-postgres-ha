@@ -12,6 +12,7 @@ postgres_gid: 26
 postgres_port: 5432
 primary_host: "192.168.200.10"
 replica_host: "192.168.200.20"
+database_network: "192.168.200.0/24"
 
 # PostgreSQL System Configuration
 postgres_home_dir: "/var/lib/postgresql"
