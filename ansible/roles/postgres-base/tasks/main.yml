@@ -1,8 +1,4 @@
 ---
-- name: Debug postgres_data_dir variable
-  debug:
-    var: postgres_data_dir
-
 - name: Create postgres user
   user:
     name: postgres
