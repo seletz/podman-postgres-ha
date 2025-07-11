@@ -19,7 +19,7 @@
 - name: Create init script for replica user
   template:
     src: init-replica.sql.j2
-    dest: /tmp/init-replica.sql
+    dest: "{{ postgres_home_dir }}/init-replica.sql"
     owner: postgres
     group: postgres
     mode: '0600'
@@ -46,6 +46,5 @@
 - name: Setup replication user
   containers.podman.podman_container_exec:
     name: "{{ postgres_container_name }}"
-    command: psql -U postgres -f /tmp/init-replica.sql
+    command: psql -U {{ postgres_user }} -d {{ postgres_database }} -f /tmp/init-replica.sql
   become: yes
-  become_user: postgres

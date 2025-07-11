@@ -6,6 +6,8 @@ postgres_user: "testuser"
 postgres_password: "securepass123"
 postgres_replication_user: "replicator"
 postgres_replication_password: "replicatorpass123"
+postgres_uid: 26
+postgres_gid: 26
 
 # Networking
 postgres_port: 5432

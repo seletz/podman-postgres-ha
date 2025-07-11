@@ -1,4 +1,1 @@
 ---
-# PostgreSQL system user configuration
-postgres_uid: 26
-postgres_gid: 26

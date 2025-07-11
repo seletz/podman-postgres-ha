@@ -16,6 +16,20 @@
     shell: /bin/bash
   become: yes
 
+- name: Ensure postgres home directory permissions
+  file:
+    path: "{{ postgres_home_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0755'
+  become: yes
+
+- name: Enable linger for postgres user
+  command: loginctl enable-linger {{ postgres_uid }}
+  become: yes
+  changed_when: false
+
 - name: Create PostgreSQL data directory
   file:
     path: "{{ postgres_data_dir }}"
